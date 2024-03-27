@@ -7,7 +7,9 @@ const HeroBanner = () => {
   return (
     <Box sx={{
         mt: {lg:'212px', xs:'70px'},
-        ml: {sm:'5px'}
+        ml: {sm:'50px'},
+        position:'relative',
+        p:'20px'
     }}>
         <Typography
             color='#FF2625'
@@ -26,7 +28,7 @@ const HeroBanner = () => {
         <Typography 
             fontSize='22px'
             lineHeight='35px'
-            mb='4'
+            mb={5}
         >
             Check out the most effective Exercises
         </Typography>
