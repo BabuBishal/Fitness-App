@@ -19,6 +19,10 @@ const BodyPart = ({item, setBodyPart,bodyPart}) => {
             cursor:'pointer',
             gap:'47px'            
         }}
+        onClick={()=> {
+            setBodyPart(item);
+            window.scrollTo({top:1800, left: 100, behaviour:'smooth'})
+        }}
     >
     <img src={Icon} alt='dumbell' 
         style={{width:'40px', height:'40px'}}
@@ -28,7 +32,6 @@ const BodyPart = ({item, setBodyPart,bodyPart}) => {
         fontWeight='bold'
         color='#3A1212'
         textTransform='capitalize'
-        
     >
         {item}
     </Typography>
