@@ -8,7 +8,9 @@ const ExerciseCard = ({exercise}) => {
     <Link className='exercise-card' to={`/exercise/${exercise.id}`}>
         <img src={exercise.gifUrl} alt={exercise.name} loading='lazy' />
     
-    <Stack>
+    <Stack
+        direction='row'
+    >
         <Button 
             sx={{
                 ml:'21px',
@@ -34,7 +36,11 @@ const ExerciseCard = ({exercise}) => {
             {exercise.target}
         </Button>
     </Stack>
-    <Typography >
+    <Typography 
+        fontWeight={600} fontSize='22px' 
+        color='#000' textTransform='capitalize'
+    ml='20px'
+        pt='10px'> 
         {exercise.name}
     </Typography>
     </Link>
