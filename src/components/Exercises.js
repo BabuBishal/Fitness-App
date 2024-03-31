@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react'
 import {Pagination} from '@mui/material'
 import {Box, Stack, Typography} from '@mui/material'
 
-import { exerciseOptions, fetchData } from '../utils/fetchData'
+// import { exerciseOptions, fetchData } from '../utils/fetchData'
 import ExerciseCard from './ExerciseCard'
 
-const Exercises = ({exercises, setExercises, bodyPart}) => {
+const Exercises = ({exercises}) => {
   // console.log(exercises)
   const [currentPage, setCurrentPage] = useState(1)
   const exercisePerPage = 9
