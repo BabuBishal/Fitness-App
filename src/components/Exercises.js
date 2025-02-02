@@ -4,21 +4,25 @@ import { Box, Stack, Typography } from "@mui/material";
 
 import { exerciseOptions, fetchData } from "../utils/fetchData";
 import ExerciseCard from "./ExerciseCard";
+import Loader from "./Loader";
 
 const Exercises = ({ exercises, setExercises }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const exercisePerPage = 9;
   const indexOfLastExercise = currentPage * exercisePerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisePerPage;
 
   useEffect(() => {
     const fetchExerciseData = async () => {
+      setLoading(true);
       const exerciseData = await fetchData(
         "https://exercisedb.p.rapidapi.com/exercises?limit=0",
         exerciseOptions
       );
 
       exerciseData && setExercises(exerciseData);
+      setLoading(false);
     };
     fetchExerciseData();
   }, [setExercises]);
@@ -56,9 +60,13 @@ const Exercises = ({ exercises, setExercises }) => {
         flexWrap="wrap"
         justifyContent="center"
       >
-        {currentExercise?.map((exercise, index) => (
-          <ExerciseCard key={index} exercise={exercise} />
-        ))}
+        {!loading ? (
+          currentExercise?.map((exercise, index) => (
+            <ExerciseCard key={index} exercise={exercise} />
+          ))
+        ) : (
+          <Loader />
+        )}
       </Stack>
       <Stack mt="100px" alignItems="center">
         {exercises?.length > 9 && (

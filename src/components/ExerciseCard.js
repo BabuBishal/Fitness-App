@@ -16,6 +16,10 @@ const ExerciseCard = ({ exercise }) => {
             fontSize: "14px",
             borderRadius: "20px",
             textTransform: "capitalize",
+            padding: "5px",
+            "&:hover": {
+              backgroundColor: "#ffaaaa",
+            },
           }}
         >
           {exercise.bodyPart}
@@ -28,6 +32,10 @@ const ExerciseCard = ({ exercise }) => {
             fontSize: "14px",
             borderRadius: "20px",
             textTransform: "capitalize",
+            padding: "5px",
+            "&:hover": {
+              backgroundColor: "#fcc700",
+            },
           }}
         >
           {exercise.target}
@@ -35,7 +43,7 @@ const ExerciseCard = ({ exercise }) => {
       </Stack>
       <Typography
         fontWeight={600}
-        fontSize="22px"
+        fontSize="18px"
         color="#000"
         textTransform="capitalize"
         ml="20px"
