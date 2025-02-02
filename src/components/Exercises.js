@@ -5,33 +5,27 @@ import { Box, Stack, Typography } from "@mui/material";
 import { exerciseOptions, fetchData } from "../utils/fetchData";
 import ExerciseCard from "./ExerciseCard";
 
-const baseUrl = process.env.RAPID_API_BASE_URL;
-
 const Exercises = ({ exercises, setExercises }) => {
-  // console.log(exercises);
   const [currentPage, setCurrentPage] = useState(1);
   const exercisePerPage = 9;
   const indexOfLastExercise = currentPage * exercisePerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisePerPage;
-  console.log("first: ", indexOfFirstExercise);
-  console.log("last: ", indexOfLastExercise);
 
   useEffect(() => {
     const fetchExerciseData = async () => {
       const exerciseData = await fetchData(
-        "https://exercisedb.p.rapidapi.com/exercises?limit=27&offset=0",
+        "https://exercisedb.p.rapidapi.com/exercises?limit=0",
         exerciseOptions
       );
 
-      setExercises(exerciseData);
+      exerciseData && setExercises(exerciseData);
     };
     fetchExerciseData();
-  }, []);
+  }, [setExercises]);
 
   const currentExercise = Array.isArray(exercises)
     ? exercises?.slice(indexOfFirstExercise, indexOfLastExercise)
     : [];
-  console.log(currentExercise);
 
   // const exerciseData = fetchData(`${baseUrl}/exercises`, exerciseOptions);
   // console.log("exercise", exercises);
