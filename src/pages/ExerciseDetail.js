@@ -7,47 +7,72 @@ import { exerciseOptions, youtubeOptions, fetchData } from "../utils/fetchData";
 import Detail from "../components/Detail";
 import ExerciseVideos from "../components/ExerciseVideos";
 import SimilarExercises from "../components/SimilarExercises";
+import Loader from "../components/Loader";
 
 const ExerciseDetail = () => {
   const [exerciseDetail, setExerciseDetail] = useState({});
   const [exerciseVideos, setExerciseVideos] = useState([]);
   const [targetMuscleExercises, setTargetMuscleExercises] = useState({});
   const [equipmentExercises, setEquipmentExercises] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchExerciseData = async () => {
-      const exerciseDbUrl = "https://exercisedb.p.rapidapi.com";
-      const youtubeSearchUrl =
-        "https://youtube-search-and-download.p.rapidapi.com";
+      try {
+        const exerciseDbUrl = "https://exercisedb.p.rapidapi.com";
+        const youtubeSearchUrl =
+          "https://youtube-search-and-download.p.rapidapi.com";
 
-      const exerciseDetailData = await fetchData(
-        `${exerciseDbUrl}/exercises/exercise/${id}`,
-        exerciseOptions
-      );
-      setExerciseDetail(exerciseDetailData);
+        const exerciseDetailData = await fetchData(
+          `${exerciseDbUrl}/exercises/exercise/${id}`,
+          exerciseOptions
+        );
+        setExerciseDetail(exerciseDetailData);
+        // Fetch all data concurrently using Promise.all
+        const [
+          exerciseVideoData,
+          targetMuscleExerciseData,
+          equipmentExerciseData,
+        ] = await Promise.all([
+          fetchData(
+            `${youtubeSearchUrl}/search?query=${exerciseDetailData.name}workout`,
+            youtubeOptions
+          ),
+          fetchData(
+            `${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`,
+            exerciseOptions
+          ),
+          fetchData(
+            `${exerciseDbUrl}/exercises/equipment/${exerciseDetailData.equipment}`,
+            exerciseOptions
+          ),
+        ]);
 
-      const exerciseVideoData = await fetchData(
-        `${youtubeSearchUrl}/search?query=${exerciseDetailData.name}`,
-        youtubeOptions
-      );
-      setExerciseVideos(exerciseVideoData.contents);
-
-      const targetMuscleExerciseData = await fetchData(
-        `${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`,
-        exerciseOptions
-      );
-      setTargetMuscleExercises(targetMuscleExerciseData);
-
-      const equipmentExerciseData = await fetchData(
-        `${exerciseDbUrl}/exercises/equipment/${exerciseDetailData.equipment}`,
-        exerciseOptions
-      );
-      setEquipmentExercises(equipmentExerciseData);
+        setExerciseVideos(exerciseVideoData.contents);
+        setTargetMuscleExercises(targetMuscleExerciseData);
+        setEquipmentExercises(equipmentExerciseData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching exercise data:", error);
+        setLoading(false);
+      }
     };
     fetchExerciseData();
   }, [id]);
-
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Loader />
+      </Box>
+    );
+  }
   return (
     <Box>
       <Detail exerciseDetail={exerciseDetail} />

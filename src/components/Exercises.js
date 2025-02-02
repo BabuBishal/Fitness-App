@@ -2,38 +2,38 @@ import React, { useState, useEffect } from "react";
 import { Pagination } from "@mui/material";
 import { Box, Stack, Typography } from "@mui/material";
 
-import { exerciseOptions, fetchData } from "../utils/fetchData";
+// import { exerciseOptions, fetchData } from "../utils/fetchData";
 import ExerciseCard from "./ExerciseCard";
 import Loader from "./Loader";
 
-const Exercises = ({ exercises, setExercises }) => {
+const Exercises = ({
+  exercises,
+  setFilteredExercises,
+  filteredExercises,
+  bodyPart,
+  loading,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const exercisePerPage = 9;
   const indexOfLastExercise = currentPage * exercisePerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisePerPage;
 
   useEffect(() => {
-    const fetchExerciseData = async () => {
-      setLoading(true);
-      const exerciseData = await fetchData(
-        "https://exercisedb.p.rapidapi.com/exercises?limit=0",
-        exerciseOptions
+    if (exercises.length) {
+      setFilteredExercises(
+        bodyPart === "all"
+          ? exercises
+          : exercises.filter((item) => item.bodyPart === bodyPart)
       );
+    }
+  }, [bodyPart, exercises, setFilteredExercises]);
 
-      exerciseData && setExercises(exerciseData);
-      setLoading(false);
-    };
-    fetchExerciseData();
-  }, [setExercises]);
+  const currentExercise = filteredExercises?.slice(
+    indexOfFirstExercise,
+    indexOfLastExercise
+  );
 
-  const currentExercise = Array.isArray(exercises)
-    ? exercises?.slice(indexOfFirstExercise, indexOfLastExercise)
-    : [];
-
-  // const exerciseData = fetchData(`${baseUrl}/exercises`, exerciseOptions);
-  // console.log("exercise", exercises);
-  // console.log(currentExercise);
   const paginate = (e, value) => {
     setCurrentPage(value);
 

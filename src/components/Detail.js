@@ -8,7 +8,6 @@ import EquipmentImage from "../assets/icons/equipment.png";
 const Detail = ({ exerciseDetail }) => {
   const { bodyPart, gifUrl, name, target, equipment, instructions } =
     exerciseDetail;
-  console.log("detail", exerciseDetail);
   const extraDetail = [
     {
       icon: BodyPartImage,
