@@ -22,24 +22,52 @@ const SearchExercises = ({ setFilteredExercises, bodyPart, setBodyPart }) => {
     fetchExerciseData();
   }, []);
 
+  // const handleSearch = async () => {
+  //   if (search) {
+  //     const exerciseData = await fetchData(
+  //       "https://exercisedb.p.rapidapi.com/exercises?limit=0",
+  //       exerciseOptions
+  //     );
+  //     // console.log(exerciseData)
+  //     const searchedExercises = exerciseData.filter(
+  //       (item) =>
+  //         item.name.toLowerCase().includes(search) ||
+  //         item.target.toLowerCase().includes(search) ||
+  //         item.equipment.toLowerCase().includes(search) ||
+  //         item.bodyPart.toLowerCase().includes(search)
+  //     );
+
+  //     setSearch("");
+  //     setFilteredExercises(searchedExercises);
+  //     // console.log(searchedExercises);
+  //   }
+  // };
+
   const handleSearch = async () => {
-    if (search) {
+    if (!search.trim()) return; // Prevent empty searches
+
+    try {
       const exerciseData = await fetchData(
         "https://exercisedb.p.rapidapi.com/exercises?limit=0",
         exerciseOptions
       );
-      // console.log(exerciseData)
-      const searchedExercises = exerciseData.filter(
-        (item) =>
-          item.name.toLowerCase().includes(search) ||
-          item.target.toLowerCase().includes(search) ||
-          item.equipment.toLowerCase().includes(search) ||
-          item.bodyPart.toLowerCase().includes(search)
+
+      if (!exerciseData || !Array.isArray(exerciseData)) {
+        console.error("Invalid data format");
+        return;
+      }
+
+      const searchedExercises = exerciseData.filter((item) =>
+        [item.name, item.target, item.equipment, item.bodyPart].some((field) =>
+          field?.toLowerCase().includes(search)
+        )
       );
 
-      setSearch("");
       setFilteredExercises(searchedExercises);
-      // console.log(searchedExercises);
+      setSearch("");
+      window.scrollTo({ top: 1800, behaviour: "smooth" });
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
     }
   };
 
@@ -67,6 +95,7 @@ const SearchExercises = ({ setFilteredExercises, bodyPart, setBodyPart }) => {
             backgroundColor: "#fff",
             borderRadius: "40px",
           }}
+          value={search}
           height="76px"
           onChange={(e) => setSearch(e.target.value.toLowerCase())}
           placeholder="Search Exercises"

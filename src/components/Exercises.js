@@ -14,10 +14,7 @@ const Exercises = ({
   loading,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  // const [loading, setLoading] = useState(false);
-  const exercisePerPage = 9;
-  const indexOfLastExercise = currentPage * exercisePerPage;
-  const indexOfFirstExercise = indexOfLastExercise - exercisePerPage;
+  const exercisesPerPage = 9;
 
   useEffect(() => {
     if (exercises.length) {
@@ -26,15 +23,18 @@ const Exercises = ({
           ? exercises
           : exercises.filter((item) => item.bodyPart === bodyPart)
       );
+      setCurrentPage(1);
     }
   }, [bodyPart, exercises, setFilteredExercises]);
 
+  const indexOfLastExercise = currentPage * exercisesPerPage;
+  const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
   const currentExercise = filteredExercises?.slice(
     indexOfFirstExercise,
     indexOfLastExercise
   );
 
-  const paginate = (e, value) => {
+  const paginate = (_, value) => {
     setCurrentPage(value);
 
     window.scrollTo({ top: 1800, behavior: "smooth" });
@@ -60,21 +60,25 @@ const Exercises = ({
         flexWrap="wrap"
         justifyContent="center"
       >
-        {!loading ? (
-          currentExercise?.map((exercise, index) => (
-            <ExerciseCard key={index} exercise={exercise} />
+        {loading ? (
+          <Loader />
+        ) : currentExercise.length > 0 ? (
+          currentExercise.map((exercise) => (
+            <ExerciseCard key={exercise.id} exercise={exercise} />
           ))
         ) : (
-          <Loader />
+          <Typography variant="h6" color="textSecondary">
+            No exercises match your search. Try a different keyword.
+          </Typography>
         )}
       </Stack>
       <Stack mt="100px" alignItems="center">
-        {exercises?.length > 9 && (
+        {filteredExercises.length > exercisesPerPage && (
           <Pagination
             color="standard"
             shape="rounded"
             defaultPage={1}
-            count={Math.ceil(exercises.length / 9)}
+            count={Math.ceil(filteredExercises.length / 9)}
             page={currentPage}
             onChange={paginate}
             size="large"
